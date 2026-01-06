@@ -74,6 +74,216 @@ const CALCULATOR_REGISTRY = {
     ]
 };
 
+function registerExtraTools(extraTools) {
+    if (!extraTools) return;
+    Object.entries(extraTools).forEach(([key, config]) => {
+        if (!config || !config.category) return;
+        if (!CALCULATOR_REGISTRY[config.category]) {
+            CALCULATOR_REGISTRY[config.category] = [];
+        }
+        CALCULATOR_REGISTRY[config.category].push({
+            name: config.title || config.name || key,
+            url: `/${config.category.toLowerCase().replace(/\\s+/g, '-')}/${key}.html`,
+            icon: config.icon || 'fa-calculator'
+        });
+    });
+    if (GlobalSearch && GlobalSearch.buildIndex) {
+        GlobalSearch.buildIndex();
+    }
+}
+window.registerExtraTools = registerExtraTools;
+
+function registerExtraRegistry(extraRegistry) {
+    if (!extraRegistry) return;
+    Object.entries(extraRegistry).forEach(([category, tools]) => {
+        if (!CALCULATOR_REGISTRY[category]) {
+            CALCULATOR_REGISTRY[category] = [];
+        }
+        tools.forEach((tool) => {
+            CALCULATOR_REGISTRY[category].push(tool);
+        });
+    });
+    if (GlobalSearch && GlobalSearch.buildIndex) {
+        GlobalSearch.buildIndex();
+    }
+}
+window.registerExtraRegistry = registerExtraRegistry;
+
+const extraRegistryScript = document.createElement('script');
+extraRegistryScript.src = '/js/extra-registry.js';
+extraRegistryScript.defer = true;
+document.head.appendChild(extraRegistryScript);
+
+const SiteSettings = {
+    key: 'dailyCalcSettings',
+    defaults: {
+        siteName: 'DailyCalc.org',
+        defaultPoints: 0,
+        ads: [
+            { slot: 'sidebar-300x250', label: 'Sidebar 300x250', html: '' },
+            { slot: 'inline-728x90', label: 'Inline 728x90', html: '' }
+        ],
+        analytics: {
+            enabled: false,
+            script: ''
+        },
+        ai: {
+            provider: 'openai',
+            openaiApiKey: '',
+            claudeApiKey: '',
+            geminiApiKey: '',
+            proxyUrl: ''
+        },
+        membership: {
+            plans: [
+                { name: 'Starter', price: '$4.99', points: 500 },
+                { name: 'Pro', price: '$9.99', points: 1200 },
+                { name: 'Team', price: '$19.99', points: 3000 }
+            ],
+            packages: [
+                { name: '100 Points', price: '$2.99', points: 100 },
+                { name: '500 Points', price: '$9.99', points: 500 },
+                { name: '1500 Points', price: '$19.99', points: 1500 }
+            ]
+        }
+    },
+    get() {
+        try {
+            const stored = JSON.parse(localStorage.getItem(this.key));
+            return stored ? { ...this.defaults, ...stored } : { ...this.defaults };
+        } catch (e) {
+            return { ...this.defaults };
+        }
+    },
+    save(settings) {
+        localStorage.setItem(this.key, JSON.stringify(settings));
+    },
+    update(partial) {
+        const current = this.get();
+        const next = { ...current, ...partial };
+        this.save(next);
+        return next;
+    }
+};
+window.SiteSettings = SiteSettings;
+
+const StatsManager = {
+    key: 'dailyCalcStats',
+    get() {
+        try {
+            return JSON.parse(localStorage.getItem(this.key)) || { pages: {} };
+        } catch (e) {
+            return { pages: {} };
+        }
+    },
+    save(data) {
+        localStorage.setItem(this.key, JSON.stringify(data));
+    },
+    track() {
+        const data = this.get();
+        const path = window.location.pathname;
+        const toolMeta = this.resolveToolMeta(path);
+        const title = toolMeta?.name || document.title;
+        const category = toolMeta?.category || 'General';
+        const current = data.pages[path] || { title, category, views: 0, lastViewed: null };
+        current.views += 1;
+        current.lastViewed = new Date().toISOString();
+        current.title = title;
+        current.category = category;
+        data.pages[path] = current;
+        this.save(data);
+    },
+    resolveToolMeta(path) {
+        if (window.EXTRA_CALCULATORS) {
+            const slug = path.split('/').pop()?.replace('.html', '');
+            const extra = window.EXTRA_CALCULATORS[slug];
+            if (extra) return { name: extra.title, category: extra.category, icon: extra.icon, url: path };
+        }
+        for (const [category, tools] of Object.entries(CALCULATOR_REGISTRY)) {
+            const match = tools.find((tool) => tool.url === path);
+            if (match) return { ...match, category };
+        }
+        return null;
+    },
+    topTools(limit = 10) {
+        const data = this.get();
+        return Object.entries(data.pages)
+            .map(([path, info]) => ({ path, ...info }))
+            .sort((a, b) => b.views - a.views)
+            .slice(0, limit);
+    }
+};
+window.StatsManager = StatsManager;
+
+const PointsManager = {
+    key: 'dailyCalcPoints',
+    init(defaultPoints = 0) {
+        const data = this.get();
+        if (data.balance === 0 && data.history.length === 0 && defaultPoints > 0) {
+            data.balance = defaultPoints;
+            data.history.unshift({ type: 'credit', points: defaultPoints, note: 'Welcome bonus', date: new Date().toISOString() });
+            this.save(data);
+        }
+    },
+    get() {
+        try {
+            return JSON.parse(localStorage.getItem(this.key)) || { balance: 0, history: [] };
+        } catch (e) {
+            return { balance: 0, history: [] };
+        }
+    },
+    save(data) {
+        localStorage.setItem(this.key, JSON.stringify(data));
+    },
+    add(points, note) {
+        const data = this.get();
+        data.balance += points;
+        data.history.unshift({ type: 'credit', points, note, date: new Date().toISOString() });
+        this.save(data);
+        return data;
+    },
+    spend(points, note) {
+        const data = this.get();
+        if (data.balance < points) return false;
+        data.balance -= points;
+        data.history.unshift({ type: 'debit', points, note, date: new Date().toISOString() });
+        this.save(data);
+        return true;
+    }
+};
+window.PointsManager = PointsManager;
+
+const AdManager = {
+    renderSlots(root = document) {
+        const settings = SiteSettings.get();
+        const slots = settings.ads || [];
+        root.querySelectorAll('[data-ad-slot]').forEach((slotEl) => {
+            const slotName = slotEl.dataset.adSlot;
+            const slotConfig = slots.find((slot) => slot.slot === slotName);
+            if (slotConfig && slotConfig.html) {
+                slotEl.innerHTML = slotConfig.html;
+                slotEl.classList.remove('is-placeholder');
+            } else {
+                slotEl.innerHTML = `<span class="text-xs font-semibold text-slate-400">ADVERTISEMENT<br>${slotConfig ? slotConfig.label : slotName}</span>`;
+                slotEl.classList.add('is-placeholder');
+            }
+        });
+    }
+};
+window.AdManager = AdManager;
+
+const AnalyticsManager = {
+    init() {
+        const settings = SiteSettings.get();
+        if (!settings.analytics || !settings.analytics.enabled || !settings.analytics.script) return;
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.text = settings.analytics.script;
+        document.head.appendChild(script);
+    }
+};
+window.AnalyticsManager = AnalyticsManager;
+
 // --- HISTORY MANAGER ---
 const HistoryManager = {
     save(toolName, inputs, result, url) {
@@ -803,6 +1013,10 @@ document.addEventListener('DOMContentLoaded', () => {
     SidebarWidget.init();
     AutoSave.init(); 
     DynamicSEO.init();
+    AnalyticsManager.init();
+    StatsManager.track();
+    AdManager.renderSlots();
+    PointsManager.init(SiteSettings.get().defaultPoints || 0);
 
     const loadSidebarWidget = () => {
         const widgets = document.querySelectorAll('[data-widget="related-tools"]');

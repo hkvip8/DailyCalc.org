@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Control Center | DailyCalc.org</title>
+    <meta name="description" content="Manage ads, analytics, AI settings, memberships, and site preferences.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="canonical" href="https://dailycalc.org/admin/">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../css/global.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../js/tailwind-config.js"></script>
+    <script src="../js/global.js" defer></script>
+    <script src="../js/common-layout.js" defer></script>
+    <script src="../js/admin.js" defer></script>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased">
+    <div id="header-placeholder"></div>
+
+    <main class="bg-slate-50">
+        <div class="mx-auto main-container px-4 py-6">
+            <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-soft sm:p-8 space-y-6">
+                <div class="calc-header">
+                    <div class="calc-icon">
+                        <i class="fa-solid fa-gear"></i>
+                    </div>
+                    <div>
+                        <h1 class="calc-title">Admin Control Center</h1>
+                        <p class="calc-desc">Manage ads, analytics, AI integrations, memberships, and site settings.</p>
+                    </div>
+                </div>
+
+                <section class="content-section">
+                    <div class="bg-gradient-to-r from-brand-dark to-brand-red px-4 py-2 border-b border-white/10">
+                        <h2 class="text-sm font-bold text-white">Site Settings</h2>
+                    </div>
+                    <div class="p-4 grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <label class="text-xs font-bold text-slate-700">Site Name</label>
+                            <input id="siteNameInput" type="text" class="compact-input w-full h-9" />
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-700">Default Points Balance</label>
+                            <input id="defaultPointsInput" type="number" class="compact-input w-full h-9" value="0" />
+                        </div>
+                        <div class="sm:col-span-2">
+                            <button id="saveSiteSettings" class="rounded bg-brand-dark px-4 py-2 text-xs font-bold text-white hover:bg-brand-red">Save Settings</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <div class="bg-gradient-to-r from-brand-dark to-brand-red px-4 py-2 border-b border-white/10">
+                        <h2 class="text-sm font-bold text-white">Ad Slots</h2>
+                    </div>
+                    <div class="p-4 space-y-4" id="adSlotContainer"></div>
+                    <div class="px-4 pb-4">
+                        <button id="addAdSlot" class="rounded border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-600 hover:border-brand-red/40">Add Ad Slot</button>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <div class="bg-gradient-to-r from-brand-dark to-brand-red px-4 py-2 border-b border-white/10">
+                        <h2 class="text-sm font-bold text-white">Analytics & Tracking</h2>
+                    </div>
+                    <div class="p-4 space-y-3">
+                        <label class="flex items-center gap-2 text-xs font-semibold text-slate-700">
+                            <input type="checkbox" id="analyticsEnabled" /> Enable analytics script
+                        </label>
+                        <textarea id="analyticsScript" rows="4" class="w-full rounded border border-slate-300 p-2 text-xs" placeholder="Paste analytics script here..."></textarea>
+                        <button id="saveAnalytics" class="rounded bg-brand-dark px-4 py-2 text-xs font-bold text-white hover:bg-brand-red">Save Analytics</button>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <div class="bg-gradient-to-r from-brand-dark to-brand-red px-4 py-2 border-b border-white/10">
+                        <h2 class="text-sm font-bold text-white">AI Provider Settings</h2>
+                    </div>
+                    <div class="p-4 grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <label class="text-xs font-bold text-slate-700">Provider</label>
+                            <select id="aiProvider" class="compact-select w-full h-9">
+                                <option value="openai">OpenAI</option>
+                                <option value="claude">Claude</option>
+                                <option value="gemini">Gemini</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-700">Proxy URL (optional)</label>
+                            <input id="aiProxy" type="text" class="compact-input w-full h-9" placeholder="https://proxy.example.com" />
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-700">OpenAI API Key</label>
+                            <input id="openaiKey" type="password" class="compact-input w-full h-9" />
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-700">Claude API Key</label>
+                            <input id="claudeKey" type="password" class="compact-input w-full h-9" />
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-700">Gemini API Key</label>
+                            <input id="geminiKey" type="password" class="compact-input w-full h-9" />
+                        </div>
+                        <div class="sm:col-span-2">
+                            <button id="saveAiSettings" class="rounded bg-brand-dark px-4 py-2 text-xs font-bold text-white hover:bg-brand-red">Save AI Settings</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <div class="bg-gradient-to-r from-brand-dark to-brand-red px-4 py-2 border-b border-white/10">
+                        <h2 class="text-sm font-bold text-white">Membership Plans & Points</h2>
+                    </div>
+                    <div class="p-4 grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <h3 class="text-xs font-bold text-slate-700 mb-2">Membership Plans</h3>
+                            <div id="membershipPlans" class="space-y-2"></div>
+                            <button id="addPlan" class="mt-2 rounded border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-600 hover:border-brand-red/40">Add Plan</button>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-bold text-slate-700 mb-2">Point Packages</h3>
+                            <div id="pointPackages" class="space-y-2"></div>
+                            <button id="addPackage" class="mt-2 rounded border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-600 hover:border-brand-red/40">Add Package</button>
+                        </div>
+                        <div class="sm:col-span-2">
+                            <button id="saveMembership" class="rounded bg-brand-dark px-4 py-2 text-xs font-bold text-white hover:bg-brand-red">Save Membership Settings</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <div class="bg-gradient-to-r from-brand-dark to-brand-red px-4 py-2 border-b border-white/10">
+                        <h2 class="text-sm font-bold text-white">Tool Usage Overview</h2>
+                    </div>
+                    <div class="p-4">
+                        <div id="adminUsageStats" class="space-y-2 text-xs text-slate-600"></div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+</body>
+</html>

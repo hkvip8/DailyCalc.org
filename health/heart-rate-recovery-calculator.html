@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Rate Recovery Calculator | DailyCalc.org</title>
+    <meta name="description" content="Estimate heart rate recovery quickly with this calculator.">
+
+    <!-- Standard Imports -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" href="../css/global.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../js/tailwind-config.js"></script>
+    <script src="../js/global.js" defer></script>
+    <script src="../js/common-layout.js" defer></script>
+    <script src="../js/extra-calculators.js"></script>
+    <script src="../js/simple-calculators.js" defer></script>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased">
+
+    <div id="header-placeholder"></div>
+    <main id="calculator-layout"></main>
+
+    <div id="tool-slot" class="hidden">
+        <div class="calc-tool-header">
+            <i class="fa-solid fa-heart-pulse"></i>
+            <span class="text-xs font-medium">Estimate heart rate recovery quickly with this calculator.</span>
+        </div>
+
+        <div class="calc-body-wrapper">
+            <div class="calc-input-section">
+                <form id="calcForm" class="space-y-4">
+                    <div id="inputFields" class="space-y-3"></div>
+                    <div class="flex flex-col gap-2">
+                        <button type="button" id="calcButton" class="w-full rounded bg-[#518428] py-2.5 text-sm font-bold text-white shadow-md hover:bg-green-700 hover:shadow-lg transition-all">Calculate</button>
+                        <button type="button" id="resetButton" class="text-[11px] text-slate-500 hover:text-brand-red font-semibold text-center underline decoration-slate-300 hover:decoration-brand-red transition-all">Reset</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="calc-output-section">
+                <div class="rounded-lg border border-slate-400 bg-white shadow-lg overflow-hidden flex flex-col">
+                    <div class="result-header">
+                        <div>
+                            <div class="result-label">Heart Rate Recovery</div>
+                            <div class="result-value" id="resultMain">--</div>
+                        </div>
+                        <div class="calc-action-group">
+                            <button id="saveBtn" class="calc-action-btn dark" title="Save Result"><i class="fa-regular fa-bookmark"></i></button>
+                            <button id="shareBtn" class="calc-action-btn dark" title="Copy Link"><i class="fa-solid fa-share-nodes"></i></button>
+                        </div>
+                    </div>
+                    <div class="p-5 bg-white text-center">
+                        <p class="text-xs text-slate-500 font-medium uppercase tracking-wide mb-1">Result Summary</p>
+                        <p class="text-lg font-bold text-slate-800" id="resultSubtitle">Enter values to calculate.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 gap-3" id="resultDetails"></div>
+
+                <div class="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3 text-[11px] text-slate-600" id="formulaBox">Formula details will appear here.</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="seo-slot" class="hidden">
+        <div class="content-section">
+            <div class="bg-gradient-to-r from-brand-dark to-brand-red px-4 py-3 border-b border-white/10">
+                <h2 class="font-bold text-white" id="seoTitle">About this calculator</h2>
+            </div>
+            <div class="calc-seo-content" id="seoContent"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            SimpleCalculator.init('heart-rate-recovery-calculator');
+        });
+    </script>
+</body>
+</html>

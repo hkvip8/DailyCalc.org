@@ -2014,6 +2014,8 @@ const SimpleCalculator = {
             output = this.convertTemperature(values, config);
         } else if (config.type === "fuel-economy") {
             output = this.convertFuelEconomy(values, config);
+        } else if (config.template) {
+            output = this.computeTemplate(values, config);
         } else {
             output = config.compute(values);
         }
@@ -2112,6 +2114,57 @@ const SimpleCalculator = {
             formula: "Fuel economy conversion uses MPG ↔ L/100km relationships."
         };
     },
+    computeTemplate(values, config) {
+        switch (config.template) {
+            case "ratio": {
+                const ratio = values.denominator === 0 ? 0 : values.numerator / values.denominator;
+                return {
+                    results: { ratio, percent: ratio },
+                    summary: `Ratio is ${ratio.toFixed(2)} (=${(ratio * 100).toFixed(1)}%).`,
+                    formula: "Ratio = Numerator ÷ Denominator"
+                };
+            }
+            case "percentage": {
+                const portion = values.base * (values.percent / 100);
+                const total = values.base + portion;
+                return {
+                    results: { portion, total },
+                    summary: `${values.percent}% of ${values.base} is ${portion.toFixed(2)}.`,
+                    formula: "Portion = Base × Percent ÷ 100"
+                };
+            }
+            case "perUnit": {
+                const perUnit = values.units === 0 ? 0 : values.total / values.units;
+                const inverse = values.total === 0 ? 0 : values.units / values.total;
+                return {
+                    results: { perUnit, inverse },
+                    summary: `Each unit is about ${perUnit.toFixed(2)}.`,
+                    formula: "Per Unit = Total ÷ Units"
+                };
+            }
+            case "difference": {
+                const difference = values.valueA - values.valueB;
+                const percentChange = values.valueB === 0 ? 0 : difference / values.valueB;
+                return {
+                    results: { difference, percentChange },
+                    summary: `Difference is ${difference.toFixed(2)}.`,
+                    formula: "Difference = Value A − Value B"
+                };
+            }
+            case "growth": {
+                const rate = values.rate / 100;
+                const future = values.start * Math.pow(1 + rate, values.periods);
+                const growth = future - values.start;
+                return {
+                    results: { future, growth },
+                    summary: `Value grows to ${future.toFixed(2)} after ${values.periods} periods.`,
+                    formula: "Future = Start × (1 + rate)^periods"
+                };
+            }
+            default:
+                return { results: {}, summary: "Enter values to calculate.", formula: "Formula not available." };
+        }
+    },
     renderResults(output, config) {
         const resultMain = document.getElementById("resultMain");
         const resultSubtitle = document.getElementById("resultSubtitle");
@@ -2191,14 +2244,85 @@ const SimpleCalculator = {
         const seoTitle = document.getElementById("seoTitle");
         const seoContent = document.getElementById("seoContent");
         if (!seoTitle || !seoContent || !config.seo) return;
+        const whatText = config.seo.what || `The ${config.title} helps you ${config.description.toLowerCase()}`;
+        const howSteps = config.seo.how || [
+            "Enter your values in the input fields.",
+            "Review the calculated results instantly.",
+            "Adjust inputs to compare scenarios."
+        ];
+        const formulaText = config.seo.formula || config.seo.formulaDetail || "Refer to the formula shown above for the calculation logic.";
+        const tips = config.seo.tips || config.seo.bullets || [
+            "Use realistic numbers for best accuracy.",
+            "Compare multiple scenarios to plan ahead.",
+            "Save results to your dashboard for quick access."
+        ];
+        const faqItems = config.seo.faq || [
+            { q: `How accurate is the ${config.title}?`, a: "This calculator follows standard formulas and provides estimates based on your inputs." },
+            { q: "Can I save my results?", a: "Yes, use the save button to store results in your dashboard." },
+            { q: "Does it work on mobile?", a: "All DailyCalc tools are mobile-first and responsive." }
+        ];
+        const related = this.getRelatedTools(config.category);
+
         seoTitle.textContent = config.seo.title;
         seoContent.innerHTML = `
-            <p>${config.description}</p>
-            <ul>
-                ${config.seo.bullets.map((bullet) => `<li>${bullet}</li>`).join("")}
-            </ul>
-            <p class="mt-3">Use this calculator to compare scenarios quickly and make informed decisions.</p>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-sm font-bold text-slate-800">What this calculator does</h3>
+                    <p>${whatText}</p>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-slate-800">How to use it</h3>
+                    <ol class="list-decimal pl-4 space-y-1">
+                        ${howSteps.map((step) => `<li>${step}</li>`).join("")}
+                    </ol>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-slate-800">Formula</h3>
+                    <p>${formulaText}</p>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-slate-800">Tips & best practices</h3>
+                    <ul class="list-disc pl-4 space-y-1">
+                        ${tips.map((tip) => `<li>${tip}</li>`).join("")}
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-slate-800">FAQ</h3>
+                    <div class="space-y-3">
+                        ${faqItems.map((item) => `
+                            <div class="rounded border border-slate-200 bg-white p-3 shadow-sm">
+                                <p class="font-semibold text-slate-700">${item.q}</p>
+                                <p>${item.a}</p>
+                            </div>
+                        `).join("")}
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-slate-800">Related tools</h3>
+                    <div class="grid gap-3 sm:grid-cols-2">
+                        ${related.map((tool) => `
+                            <a href="${tool.url}" class="block rounded border border-slate-200 bg-white p-3 shadow-sm hover:border-brand-red/40 transition">
+                                <div class="flex items-center gap-2 text-slate-700 font-semibold text-xs">
+                                    <i class="fa-solid ${tool.icon} text-brand-red"></i>
+                                    <span>${tool.name}</span>
+                                </div>
+                                <p class="mt-1 text-[11px] text-slate-500">${tool.description}</p>
+                            </a>
+                        `).join("")}
+                    </div>
+                </div>
+            </div>
         `;
+    },
+    getRelatedTools(category) {
+        if (!window.CALCULATOR_REGISTRY || !window.location) return [];
+        const tools = window.CALCULATOR_REGISTRY[category] || [];
+        const current = window.location.pathname;
+        const related = tools.filter((tool) => tool.url !== current).slice(0, 5);
+        return related.map((tool) => ({
+            ...tool,
+            description: `${tool.name} for quick answers in the ${category} category.`
+        }));
     },
     timeToMinutes(time) {
         const [hours, minutes] = time.split(":").map(Number);
@@ -2217,5 +2341,9 @@ const SimpleCalculator = {
         return Math.ceil(((tempDate - yearStart) / 86400000 + 1) / 7);
     }
 };
+
+if (window.EXTRA_CALCULATORS) {
+    Object.assign(SIMPLE_CALCULATORS, window.EXTRA_CALCULATORS);
+}
 
 window.SimpleCalculator = SimpleCalculator;
