@@ -2264,14 +2264,15 @@ const SimpleCalculator = {
         const related = this.getRelatedTools(config.category);
 
         seoTitle.textContent = config.seo.title;
+        seoContent.dataset.guideComplete = 'true';
         seoContent.innerHTML = `
             <div class="space-y-6">
                 <div>
-                    <h3 class="text-sm font-bold text-slate-800">What this calculator does</h3>
+                    <h3 class="text-sm font-bold text-slate-800">What</h3>
                     <p>${whatText}</p>
                 </div>
                 <div>
-                    <h3 class="text-sm font-bold text-slate-800">How to use it</h3>
+                    <h3 class="text-sm font-bold text-slate-800">How</h3>
                     <ol class="list-decimal pl-4 space-y-1">
                         ${howSteps.map((step) => `<li>${step}</li>`).join("")}
                     </ol>
@@ -2281,7 +2282,7 @@ const SimpleCalculator = {
                     <p>${formulaText}</p>
                 </div>
                 <div>
-                    <h3 class="text-sm font-bold text-slate-800">Tips & best practices</h3>
+                    <h3 class="text-sm font-bold text-slate-800">Tips</h3>
                     <ul class="list-disc pl-4 space-y-1">
                         ${tips.map((tip) => `<li>${tip}</li>`).join("")}
                     </ul>
@@ -2298,7 +2299,7 @@ const SimpleCalculator = {
                     </div>
                 </div>
                 <div>
-                    <h3 class="text-sm font-bold text-slate-800">Related tools</h3>
+                    <h3 class="text-sm font-bold text-slate-800">Related Tools</h3>
                     <div class="grid gap-3 sm:grid-cols-2">
                         ${related.map((tool) => `
                             <a href="${tool.url}" class="block rounded border border-slate-200 bg-white p-3 shadow-sm hover:border-brand-red/40 transition">

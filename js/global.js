@@ -226,6 +226,88 @@ const AnalyticsManager = {
 };
 window.AnalyticsManager = AnalyticsManager;
 
+const GuideEnhancer = {
+    enhance() {
+        const containers = document.querySelectorAll('.calc-seo-content, #seoContent');
+        if (!containers.length) return;
+        containers.forEach((container) => {
+            if (container.dataset.guideComplete === 'true') return;
+            const meta = StatsManager.resolveToolMeta(window.location.pathname) || {};
+            const title = meta.name || document.title.replace('| DailyCalc.org', '').trim();
+            const category = meta.category || Object.keys(CALCULATOR_REGISTRY)[0] || 'General';
+            const related = (CALCULATOR_REGISTRY[category] || [])
+                .filter((tool) => tool.url !== window.location.pathname)
+                .slice(0, 5)
+                .map((tool) => ({
+                    ...tool,
+                    description: `${tool.name} for quick answers in ${category}.`
+                }));
+
+            container.dataset.guideComplete = 'true';
+            container.insertAdjacentHTML('beforeend', `
+                <div class="mt-8 space-y-6">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-800">What</h3>
+                        <p>The ${title} helps you calculate key figures quickly and accurately.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-800">How</h3>
+                        <ol class="list-decimal pl-4 space-y-1">
+                            <li>Enter your values in the input fields.</li>
+                            <li>Review the results instantly.</li>
+                            <li>Adjust inputs to compare scenarios.</li>
+                        </ol>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-800">Formula</h3>
+                        <p>Results are computed using standard industry formulas based on the values you provide.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-800">Tips</h3>
+                        <ul class="list-disc pl-4 space-y-1">
+                            <li>Use realistic numbers for the most accurate estimate.</li>
+                            <li>Compare multiple scenarios to plan ahead.</li>
+                            <li>Save or bookmark results for quick reference.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-800">FAQ</h3>
+                        <div class="space-y-3">
+                            <div class="rounded border border-slate-200 bg-white p-3 shadow-sm">
+                                <p class="font-semibold text-slate-700">Is this calculator accurate?</p>
+                                <p>Yes. It uses standard formulas and reflects the numbers you enter.</p>
+                            </div>
+                            <div class="rounded border border-slate-200 bg-white p-3 shadow-sm">
+                                <p class="font-semibold text-slate-700">Can I use this on mobile?</p>
+                                <p>Absolutely. All DailyCalc tools are optimized for mobile devices.</p>
+                            </div>
+                            <div class="rounded border border-slate-200 bg-white p-3 shadow-sm">
+                                <p class="font-semibold text-slate-700">How should I interpret the results?</p>
+                                <p>Use the summary to compare options and adjust inputs to explore alternatives.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-800">Related Tools</h3>
+                        <div class="grid gap-3 sm:grid-cols-2">
+                            ${related.map((tool) => `
+                                <a href="${tool.url}" class="block rounded border border-slate-200 bg-white p-3 shadow-sm hover:border-brand-red/40 transition">
+                                    <div class="flex items-center gap-2 text-slate-700 font-semibold text-xs">
+                                        <i class="fa-solid ${tool.icon} text-brand-red"></i>
+                                        <span>${tool.name}</span>
+                                    </div>
+                                    <p class="mt-1 text-[11px] text-slate-500">${tool.description}</p>
+                                </a>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `);
+        });
+    }
+};
+window.GuideEnhancer = GuideEnhancer;
+
 // --- HISTORY MANAGER ---
 const HistoryManager = {
     save(toolName, inputs, result, url) {
@@ -958,6 +1040,7 @@ document.addEventListener('DOMContentLoaded', () => {
     AnalyticsManager.init();
     StatsManager.track();
     AdManager.renderSlots();
+    GuideEnhancer.enhance();
 
     const loadSidebarWidget = () => {
         const widgets = document.querySelectorAll('[data-widget="related-tools"]');
