@@ -118,7 +118,6 @@ const SiteSettings = {
     key: 'dailyCalcSettings',
     defaults: {
         siteName: 'DailyCalc.org',
-        defaultPoints: 0,
         ads: [
             { slot: 'sidebar-300x250', label: 'Sidebar 300x250', html: '' },
             { slot: 'inline-728x90', label: 'Inline 728x90', html: '' }
@@ -126,25 +125,6 @@ const SiteSettings = {
         analytics: {
             enabled: false,
             script: ''
-        },
-        ai: {
-            provider: 'openai',
-            openaiApiKey: '',
-            claudeApiKey: '',
-            geminiApiKey: '',
-            proxyUrl: ''
-        },
-        membership: {
-            plans: [
-                { name: 'Starter', price: '$4.99', points: 500 },
-                { name: 'Pro', price: '$9.99', points: 1200 },
-                { name: 'Team', price: '$19.99', points: 3000 }
-            ],
-            packages: [
-                { name: '100 Points', price: '$2.99', points: 100 },
-                { name: '500 Points', price: '$9.99', points: 500 },
-                { name: '1500 Points', price: '$19.99', points: 1500 }
-            ]
         }
     },
     get() {
@@ -214,44 +194,6 @@ const StatsManager = {
     }
 };
 window.StatsManager = StatsManager;
-
-const PointsManager = {
-    key: 'dailyCalcPoints',
-    init(defaultPoints = 0) {
-        const data = this.get();
-        if (data.balance === 0 && data.history.length === 0 && defaultPoints > 0) {
-            data.balance = defaultPoints;
-            data.history.unshift({ type: 'credit', points: defaultPoints, note: 'Welcome bonus', date: new Date().toISOString() });
-            this.save(data);
-        }
-    },
-    get() {
-        try {
-            return JSON.parse(localStorage.getItem(this.key)) || { balance: 0, history: [] };
-        } catch (e) {
-            return { balance: 0, history: [] };
-        }
-    },
-    save(data) {
-        localStorage.setItem(this.key, JSON.stringify(data));
-    },
-    add(points, note) {
-        const data = this.get();
-        data.balance += points;
-        data.history.unshift({ type: 'credit', points, note, date: new Date().toISOString() });
-        this.save(data);
-        return data;
-    },
-    spend(points, note) {
-        const data = this.get();
-        if (data.balance < points) return false;
-        data.balance -= points;
-        data.history.unshift({ type: 'debit', points, note, date: new Date().toISOString() });
-        this.save(data);
-        return true;
-    }
-};
-window.PointsManager = PointsManager;
 
 const AdManager = {
     renderSlots(root = document) {
@@ -1016,7 +958,6 @@ document.addEventListener('DOMContentLoaded', () => {
     AnalyticsManager.init();
     StatsManager.track();
     AdManager.renderSlots();
-    PointsManager.init(SiteSettings.get().defaultPoints || 0);
 
     const loadSidebarWidget = () => {
         const widgets = document.querySelectorAll('[data-widget="related-tools"]');

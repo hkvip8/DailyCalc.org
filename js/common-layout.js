@@ -71,8 +71,6 @@ const headerHTML = `
                         <!-- UPDATED: Smaller, compact buttons (px-3 py-1.5 text-xs font-bold) -->
                         <a href="/" class="inline-flex items-center justify-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-bold text-white shadow-soft transition hover:bg-white/20"><i class="fa-solid fa-house"></i> Home</a>
                         <a href="/dashboard.html" class="inline-flex items-center justify-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-bold text-white shadow-soft transition hover:bg-white/20"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
-                        <a href="/ai/" class="inline-flex items-center justify-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-bold text-white shadow-soft transition hover:bg-white/20"><i class="fa-solid fa-robot"></i> AI Hub</a>
-                        <a href="/user/" class="inline-flex items-center justify-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-bold text-white shadow-soft transition hover:bg-white/20"><i class="fa-solid fa-user"></i> Account</a>
                         
                         <!-- Desktop Wishlist Button (FIX: Contrast improved + Compact) -->
                         <button id="desktopWishlistBtn" class="inline-flex items-center justify-center gap-2 rounded-full bg-white px-3 py-1.5 text-xs font-bold text-slate-800 shadow-soft transition hover:bg-slate-100 relative group">
@@ -120,9 +118,6 @@ const headerHTML = `
                 <a href="/health/" class="mobile-menu-link"><i class="fa-solid fa-heart-pulse fa-fw"></i><span>Health</span></a>
                 <a href="/everyday-life/" class="mobile-menu-link"><i class="fa-solid fa-sun fa-fw"></i><span>Everyday Life</span></a>
                 <a href="/converters/" class="mobile-menu-link"><i class="fa-solid fa-arrows-rotate fa-fw"></i><span>Converters</span></a>
-                <a href="/ai/" class="mobile-menu-link"><i class="fa-solid fa-robot fa-fw"></i><span>AI Hub</span></a>
-                <a href="/user/" class="mobile-menu-link"><i class="fa-solid fa-user fa-fw"></i><span>User Center</span></a>
-                <a href="/admin/" class="mobile-menu-link"><i class="fa-solid fa-gear fa-fw"></i><span>Admin</span></a>
             </nav>
         </div>
     </div>
@@ -431,7 +426,14 @@ function loadCommonLayout() {
     const h = document.getElementById('header-placeholder');
     const f = document.getElementById('footer-placeholder');
     if (h) h.innerHTML = headerHTML;
-    if (f) f.innerHTML = footerHTML;
+    if (!f) {
+        const footer = document.createElement('div');
+        footer.id = 'footer-placeholder';
+        document.body.appendChild(footer);
+        footer.innerHTML = footerHTML;
+    } else {
+        f.innerHTML = footerHTML;
+    }
 
     if (window.SiteSettings) {
         const settings = window.SiteSettings.get();

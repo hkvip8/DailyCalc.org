@@ -24,8 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const usageCountBadge = document.getElementById('usageCount');
     const usageContainer = document.getElementById('usageContainer');
     const usageEmptyState = document.getElementById('usageEmptyState');
-    const pointsBalanceBadge = document.getElementById('pointsBalanceBadge');
-    const pointsBalanceValue = document.getElementById('pointsBalanceValue');
 
     // --- Helper: Time Ago ---
     function timeAgo(dateString) {
@@ -264,13 +262,6 @@ document.addEventListener('DOMContentLoaded', () => {
         `).join('');
     }
 
-    // --- 5. Load Points ---
-    function loadPoints() {
-        if (!window.PointsManager) return;
-        const data = window.PointsManager.get();
-        if (pointsBalanceBadge) pointsBalanceBadge.textContent = data.balance;
-        if (pointsBalanceValue) pointsBalanceValue.textContent = data.balance;
-    }
 
     // --- Event Listeners ---
 
@@ -337,7 +328,6 @@ document.addEventListener('DOMContentLoaded', () => {
     loadHistory();
     loadPresets();
     loadUsageStats();
-    loadPoints();
 
     // Listen for cross-tab updates or header updates
     window.addEventListener('wishlistUpdated', loadWishlist);
