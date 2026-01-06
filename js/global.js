@@ -19,25 +19,58 @@ const CALCULATOR_REGISTRY = {
         { name: "Amortization Calc", url: "/finance/amortization-calculator.html", icon: "fa-table-list" },
         { name: "Investment Calculator", url: "/finance/investment-calculator.html", icon: "fa-chart-line" },
         { name: "Inflation Calculator", url: "/finance/inflation-calculator.html", icon: "fa-money-bill-trend-up" },
-        { name: "Finance Calculator", url: "/finance/finance-calculator.html", icon: "fa-calculator" }
+        { name: "Finance Calculator", url: "/finance/finance-calculator.html", icon: "fa-calculator" },
+        { name: "Savings Goal Calculator", url: "/finance/savings-goal-calculator.html", icon: "fa-bullseye" },
+        { name: "Compound Interest", url: "/finance/compound-interest-calculator.html", icon: "fa-coins" },
+        { name: "Simple Interest", url: "/finance/simple-interest-calculator.html", icon: "fa-scale-balanced" },
+        { name: "Net Worth Calculator", url: "/finance/net-worth-calculator.html", icon: "fa-scale-unbalanced" },
+        { name: "Salary to Hourly", url: "/finance/salary-to-hourly-calculator.html", icon: "fa-clock" },
+        { name: "Budget Planner", url: "/finance/budget-planner-calculator.html", icon: "fa-wallet" }
     ],
     'Health': [
         { name: "BMI Calculator", url: "/health/bmi-calculator.html", icon: "fa-weight-scale" },
         { name: "Body Fat Calculator", url: "/health/body-fat.html", icon: "fa-ruler-vertical" },
         { name: "Calorie Calculator", url: "/health/calorie-calculator.html", icon: "fa-utensils" },
         { name: "Ideal Weight", url: "/health/ideal-weight.html", icon: "fa-child-reaching" },
-        { name: "Water Intake", url: "/health/water-intake.html", icon: "fa-glass-water" }
+        { name: "Water Intake", url: "/health/water-intake.html", icon: "fa-glass-water" },
+        { name: "BMR Calculator", url: "/health/bmr-calculator.html", icon: "fa-fire" },
+        { name: "TDEE Calculator", url: "/health/tdee-calculator.html", icon: "fa-heart-pulse" },
+        { name: "Heart Rate Zones", url: "/health/heart-rate-zones.html", icon: "fa-heart" },
+        { name: "Waist-to-Hip Ratio", url: "/health/waist-hip-ratio.html", icon: "fa-people-group" },
+        { name: "Body Surface Area", url: "/health/body-surface-area.html", icon: "fa-person" },
+        { name: "One Rep Max", url: "/health/one-rep-max.html", icon: "fa-dumbbell" },
+        { name: "Macro Calculator", url: "/health/macro-calculator.html", icon: "fa-bowl-food" },
+        { name: "Calorie Burn", url: "/health/calorie-burn.html", icon: "fa-person-running" }
     ],
     'Everyday Life': [
         { name: "Age Calculator", url: "/everyday-life/age-calculator.html", icon: "fa-cake-candles" },
         { name: "Date Difference", url: "/everyday-life/date-difference.html", icon: "fa-calendar-days" },
         { name: "Time Duration", url: "/everyday-life/time-duration.html", icon: "fa-hourglass-half" },
-        { name: "Fuel Cost", url: "/everyday-life/fuel-cost.html", icon: "fa-gas-pump" }
+        { name: "Fuel Cost", url: "/everyday-life/fuel-cost.html", icon: "fa-gas-pump" },
+        { name: "Tip Calculator", url: "/everyday-life/tip-calculator.html", icon: "fa-receipt" },
+        { name: "Discount Calculator", url: "/everyday-life/discount-calculator.html", icon: "fa-tags" },
+        { name: "Percentage Calculator", url: "/everyday-life/percentage-calculator.html", icon: "fa-percent" },
+        { name: "Bill Splitter", url: "/everyday-life/bill-splitter.html", icon: "fa-people-arrows" },
+        { name: "Commute Cost", url: "/everyday-life/commute-cost.html", icon: "fa-road" },
+        { name: "Recipe Scaler", url: "/everyday-life/recipe-scaler.html", icon: "fa-utensils" },
+        { name: "Sleep Calculator", url: "/everyday-life/sleep-calculator.html", icon: "fa-bed" },
+        { name: "Work Hours", url: "/everyday-life/work-hours-calculator.html", icon: "fa-briefcase" },
+        { name: "Day of Week", url: "/everyday-life/day-of-week-calculator.html", icon: "fa-calendar" }
     ],
     'Converters': [
         { name: "Length Converter", url: "/converters/length-converter.html", icon: "fa-ruler" },
         { name: "Weight Converter", url: "/converters/weight.html", icon: "fa-weight-hanging" },
-        { name: "Temperature", url: "/converters/temperature.html", icon: "fa-temperature-half" }
+        { name: "Temperature", url: "/converters/temperature.html", icon: "fa-temperature-half" },
+        { name: "Area Converter", url: "/converters/area-converter.html", icon: "fa-border-all" },
+        { name: "Volume Converter", url: "/converters/volume-converter.html", icon: "fa-cube" },
+        { name: "Speed Converter", url: "/converters/speed-converter.html", icon: "fa-gauge-high" },
+        { name: "Time Converter", url: "/converters/time-converter.html", icon: "fa-clock" },
+        { name: "Energy Converter", url: "/converters/energy-converter.html", icon: "fa-bolt" },
+        { name: "Power Converter", url: "/converters/power-converter.html", icon: "fa-plug" },
+        { name: "Pressure Converter", url: "/converters/pressure-converter.html", icon: "fa-gauge" },
+        { name: "Data Storage", url: "/converters/data-storage-converter.html", icon: "fa-hard-drive" },
+        { name: "Fuel Economy", url: "/converters/fuel-economy-converter.html", icon: "fa-gas-pump" },
+        { name: "Angle Converter", url: "/converters/angle-converter.html", icon: "fa-compass" }
     ]
 };
 
