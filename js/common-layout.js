@@ -29,7 +29,7 @@ const headerHTML = `
                         </div>
                         <div>
                             <!-- Reduced text size to text-base (mobile) and text-lg (desktop) -->
-                            <p class="font-heading text-base sm:text-lg font-semibold leading-tight">DailyCalc.org</p> 
+                            <p class="font-heading text-base sm:text-lg font-semibold leading-tight" id="siteName">DailyCalc.org</p> 
                             <p class="text-[9px] sm:text-[10px] text-slate-300 leading-none">Daily calculators for everyone.</p>
                         </div>
                     </a>
@@ -234,7 +234,7 @@ const CalculatorLayout = {
                 <!-- RIGHT COLUMN: Sticky Sidebar -->
                 <div class="w-full shrink-0 space-y-4 lg:w-[300px] no-print">
                     <div id="desktop-widget-placeholder" class="hidden md:block"></div>
-                    <div class="ad-box"><span class="text-xs font-semibold text-slate-400">ADVERTISEMENT<br>300x250</span></div>
+                    <div class="ad-box" data-ad-slot="sidebar-300x250"></div>
                     <div id="layout-sidebar-container"></div>
                     <div class="content-section sticky top-4" id="layout-related-tools" data-widget="related-tools" data-category="${config.category}">
                         <div class="p-4 text-center text-slate-400 text-xs"><i class="fa-solid fa-spinner fa-spin mb-2"></i><br>Loading tools...</div>
@@ -278,6 +278,9 @@ const CalculatorLayout = {
         target.appendChild(wrapper);
 
         // 7. Post-Render Init
+        if (window.AdManager && typeof window.AdManager.renderSlots === 'function') {
+            window.AdManager.renderSlots(wrapper);
+        }
         if (window.SidebarWidget && typeof window.SidebarWidget.init === 'function') window.SidebarWidget.init();
         this.loadRelatedTools(config.category);
     },
@@ -423,7 +426,22 @@ function loadCommonLayout() {
     const h = document.getElementById('header-placeholder');
     const f = document.getElementById('footer-placeholder');
     if (h) h.innerHTML = headerHTML;
-    if (f) f.innerHTML = footerHTML;
+    if (!f) {
+        const footer = document.createElement('div');
+        footer.id = 'footer-placeholder';
+        document.body.appendChild(footer);
+        footer.innerHTML = footerHTML;
+    } else {
+        f.innerHTML = footerHTML;
+    }
+
+    if (window.SiteSettings) {
+        const settings = window.SiteSettings.get();
+        const siteNameEl = document.getElementById('siteName');
+        if (siteNameEl && settings.siteName) {
+            siteNameEl.textContent = settings.siteName;
+        }
+    }
     
     if (!document.getElementById('toast-placeholder')) {
         const t = document.createElement('div'); t.id = 'toast-placeholder'; t.innerHTML = toastHTML;

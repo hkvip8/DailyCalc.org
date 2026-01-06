@@ -19,27 +19,294 @@ const CALCULATOR_REGISTRY = {
         { name: "Amortization Calc", url: "/finance/amortization-calculator.html", icon: "fa-table-list" },
         { name: "Investment Calculator", url: "/finance/investment-calculator.html", icon: "fa-chart-line" },
         { name: "Inflation Calculator", url: "/finance/inflation-calculator.html", icon: "fa-money-bill-trend-up" },
-        { name: "Finance Calculator", url: "/finance/finance-calculator.html", icon: "fa-calculator" }
+        { name: "Finance Calculator", url: "/finance/finance-calculator.html", icon: "fa-calculator" },
+        { name: "Savings Goal Calculator", url: "/finance/savings-goal-calculator.html", icon: "fa-bullseye" },
+        { name: "Compound Interest", url: "/finance/compound-interest-calculator.html", icon: "fa-coins" },
+        { name: "Simple Interest", url: "/finance/simple-interest-calculator.html", icon: "fa-scale-balanced" },
+        { name: "Net Worth Calculator", url: "/finance/net-worth-calculator.html", icon: "fa-scale-unbalanced" },
+        { name: "Salary to Hourly", url: "/finance/salary-to-hourly-calculator.html", icon: "fa-clock" },
+        { name: "Budget Planner", url: "/finance/budget-planner-calculator.html", icon: "fa-wallet" }
     ],
     'Health': [
         { name: "BMI Calculator", url: "/health/bmi-calculator.html", icon: "fa-weight-scale" },
         { name: "Body Fat Calculator", url: "/health/body-fat.html", icon: "fa-ruler-vertical" },
         { name: "Calorie Calculator", url: "/health/calorie-calculator.html", icon: "fa-utensils" },
         { name: "Ideal Weight", url: "/health/ideal-weight.html", icon: "fa-child-reaching" },
-        { name: "Water Intake", url: "/health/water-intake.html", icon: "fa-glass-water" }
+        { name: "Water Intake", url: "/health/water-intake.html", icon: "fa-glass-water" },
+        { name: "BMR Calculator", url: "/health/bmr-calculator.html", icon: "fa-fire" },
+        { name: "TDEE Calculator", url: "/health/tdee-calculator.html", icon: "fa-heart-pulse" },
+        { name: "Heart Rate Zones", url: "/health/heart-rate-zones.html", icon: "fa-heart" },
+        { name: "Waist-to-Hip Ratio", url: "/health/waist-hip-ratio.html", icon: "fa-people-group" },
+        { name: "Body Surface Area", url: "/health/body-surface-area.html", icon: "fa-person" },
+        { name: "One Rep Max", url: "/health/one-rep-max.html", icon: "fa-dumbbell" },
+        { name: "Macro Calculator", url: "/health/macro-calculator.html", icon: "fa-bowl-food" },
+        { name: "Calorie Burn", url: "/health/calorie-burn.html", icon: "fa-person-running" }
     ],
     'Everyday Life': [
         { name: "Age Calculator", url: "/everyday-life/age-calculator.html", icon: "fa-cake-candles" },
         { name: "Date Difference", url: "/everyday-life/date-difference.html", icon: "fa-calendar-days" },
         { name: "Time Duration", url: "/everyday-life/time-duration.html", icon: "fa-hourglass-half" },
-        { name: "Fuel Cost", url: "/everyday-life/fuel-cost.html", icon: "fa-gas-pump" }
+        { name: "Fuel Cost", url: "/everyday-life/fuel-cost.html", icon: "fa-gas-pump" },
+        { name: "Tip Calculator", url: "/everyday-life/tip-calculator.html", icon: "fa-receipt" },
+        { name: "Discount Calculator", url: "/everyday-life/discount-calculator.html", icon: "fa-tags" },
+        { name: "Percentage Calculator", url: "/everyday-life/percentage-calculator.html", icon: "fa-percent" },
+        { name: "Bill Splitter", url: "/everyday-life/bill-splitter.html", icon: "fa-people-arrows" },
+        { name: "Commute Cost", url: "/everyday-life/commute-cost.html", icon: "fa-road" },
+        { name: "Recipe Scaler", url: "/everyday-life/recipe-scaler.html", icon: "fa-utensils" },
+        { name: "Sleep Calculator", url: "/everyday-life/sleep-calculator.html", icon: "fa-bed" },
+        { name: "Work Hours", url: "/everyday-life/work-hours-calculator.html", icon: "fa-briefcase" },
+        { name: "Day of Week", url: "/everyday-life/day-of-week-calculator.html", icon: "fa-calendar" }
     ],
     'Converters': [
         { name: "Length Converter", url: "/converters/length-converter.html", icon: "fa-ruler" },
         { name: "Weight Converter", url: "/converters/weight.html", icon: "fa-weight-hanging" },
-        { name: "Temperature", url: "/converters/temperature.html", icon: "fa-temperature-half" }
+        { name: "Temperature", url: "/converters/temperature.html", icon: "fa-temperature-half" },
+        { name: "Area Converter", url: "/converters/area-converter.html", icon: "fa-border-all" },
+        { name: "Volume Converter", url: "/converters/volume-converter.html", icon: "fa-cube" },
+        { name: "Speed Converter", url: "/converters/speed-converter.html", icon: "fa-gauge-high" },
+        { name: "Time Converter", url: "/converters/time-converter.html", icon: "fa-clock" },
+        { name: "Energy Converter", url: "/converters/energy-converter.html", icon: "fa-bolt" },
+        { name: "Power Converter", url: "/converters/power-converter.html", icon: "fa-plug" },
+        { name: "Pressure Converter", url: "/converters/pressure-converter.html", icon: "fa-gauge" },
+        { name: "Data Storage", url: "/converters/data-storage-converter.html", icon: "fa-hard-drive" },
+        { name: "Fuel Economy", url: "/converters/fuel-economy-converter.html", icon: "fa-gas-pump" },
+        { name: "Angle Converter", url: "/converters/angle-converter.html", icon: "fa-compass" }
     ]
 };
+
+function registerExtraTools(extraTools) {
+    if (!extraTools) return;
+    Object.entries(extraTools).forEach(([key, config]) => {
+        if (!config || !config.category) return;
+        if (!CALCULATOR_REGISTRY[config.category]) {
+            CALCULATOR_REGISTRY[config.category] = [];
+        }
+        CALCULATOR_REGISTRY[config.category].push({
+            name: config.title || config.name || key,
+            url: `/${config.category.toLowerCase().replace(/\\s+/g, '-')}/${key}.html`,
+            icon: config.icon || 'fa-calculator'
+        });
+    });
+    if (GlobalSearch && GlobalSearch.buildIndex) {
+        GlobalSearch.buildIndex();
+    }
+}
+window.registerExtraTools = registerExtraTools;
+
+function registerExtraRegistry(extraRegistry) {
+    if (!extraRegistry) return;
+    Object.entries(extraRegistry).forEach(([category, tools]) => {
+        if (!CALCULATOR_REGISTRY[category]) {
+            CALCULATOR_REGISTRY[category] = [];
+        }
+        tools.forEach((tool) => {
+            CALCULATOR_REGISTRY[category].push(tool);
+        });
+    });
+    if (GlobalSearch && GlobalSearch.buildIndex) {
+        GlobalSearch.buildIndex();
+    }
+}
+window.registerExtraRegistry = registerExtraRegistry;
+
+const extraRegistryScript = document.createElement('script');
+extraRegistryScript.src = '/js/extra-registry.js';
+extraRegistryScript.defer = true;
+document.head.appendChild(extraRegistryScript);
+
+const SiteSettings = {
+    key: 'dailyCalcSettings',
+    defaults: {
+        siteName: 'DailyCalc.org',
+        ads: [
+            { slot: 'sidebar-300x250', label: 'Sidebar 300x250', html: '' },
+            { slot: 'inline-728x90', label: 'Inline 728x90', html: '' }
+        ],
+        analytics: {
+            enabled: false,
+            script: ''
+        }
+    },
+    get() {
+        try {
+            const stored = JSON.parse(localStorage.getItem(this.key));
+            return stored ? { ...this.defaults, ...stored } : { ...this.defaults };
+        } catch (e) {
+            return { ...this.defaults };
+        }
+    },
+    save(settings) {
+        localStorage.setItem(this.key, JSON.stringify(settings));
+    },
+    update(partial) {
+        const current = this.get();
+        const next = { ...current, ...partial };
+        this.save(next);
+        return next;
+    }
+};
+window.SiteSettings = SiteSettings;
+
+const StatsManager = {
+    key: 'dailyCalcStats',
+    get() {
+        try {
+            return JSON.parse(localStorage.getItem(this.key)) || { pages: {} };
+        } catch (e) {
+            return { pages: {} };
+        }
+    },
+    save(data) {
+        localStorage.setItem(this.key, JSON.stringify(data));
+    },
+    track() {
+        const data = this.get();
+        const path = window.location.pathname;
+        const toolMeta = this.resolveToolMeta(path);
+        const title = toolMeta?.name || document.title;
+        const category = toolMeta?.category || 'General';
+        const current = data.pages[path] || { title, category, views: 0, lastViewed: null };
+        current.views += 1;
+        current.lastViewed = new Date().toISOString();
+        current.title = title;
+        current.category = category;
+        data.pages[path] = current;
+        this.save(data);
+    },
+    resolveToolMeta(path) {
+        if (window.EXTRA_CALCULATORS) {
+            const slug = path.split('/').pop()?.replace('.html', '');
+            const extra = window.EXTRA_CALCULATORS[slug];
+            if (extra) return { name: extra.title, category: extra.category, icon: extra.icon, url: path };
+        }
+        for (const [category, tools] of Object.entries(CALCULATOR_REGISTRY)) {
+            const match = tools.find((tool) => tool.url === path);
+            if (match) return { ...match, category };
+        }
+        return null;
+    },
+    topTools(limit = 10) {
+        const data = this.get();
+        return Object.entries(data.pages)
+            .map(([path, info]) => ({ path, ...info }))
+            .sort((a, b) => b.views - a.views)
+            .slice(0, limit);
+    }
+};
+window.StatsManager = StatsManager;
+
+const AdManager = {
+    renderSlots(root = document) {
+        const settings = SiteSettings.get();
+        const slots = settings.ads || [];
+        root.querySelectorAll('[data-ad-slot]').forEach((slotEl) => {
+            const slotName = slotEl.dataset.adSlot;
+            const slotConfig = slots.find((slot) => slot.slot === slotName);
+            if (slotConfig && slotConfig.html) {
+                slotEl.innerHTML = slotConfig.html;
+                slotEl.classList.remove('is-placeholder');
+            } else {
+                slotEl.innerHTML = `<span class="text-xs font-semibold text-slate-400">ADVERTISEMENT<br>${slotConfig ? slotConfig.label : slotName}</span>`;
+                slotEl.classList.add('is-placeholder');
+            }
+        });
+    }
+};
+window.AdManager = AdManager;
+
+const AnalyticsManager = {
+    init() {
+        const settings = SiteSettings.get();
+        if (!settings.analytics || !settings.analytics.enabled || !settings.analytics.script) return;
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.text = settings.analytics.script;
+        document.head.appendChild(script);
+    }
+};
+window.AnalyticsManager = AnalyticsManager;
+
+const GuideEnhancer = {
+    enhance() {
+        const containers = document.querySelectorAll('.calc-seo-content, #seoContent');
+        if (!containers.length) return;
+        containers.forEach((container) => {
+            if (container.dataset.guideComplete === 'true') return;
+            const meta = StatsManager.resolveToolMeta(window.location.pathname) || {};
+            const title = meta.name || document.title.replace('| DailyCalc.org', '').trim();
+            const category = meta.category || Object.keys(CALCULATOR_REGISTRY)[0] || 'General';
+            const related = (CALCULATOR_REGISTRY[category] || [])
+                .filter((tool) => tool.url !== window.location.pathname)
+                .slice(0, 5)
+                .map((tool) => ({
+                    ...tool,
+                    description: `${tool.name} for quick answers in ${category}.`
+                }));
+
+            container.dataset.guideComplete = 'true';
+            container.insertAdjacentHTML('beforeend', `
+                <div class="mt-8 space-y-6">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-800">What</h3>
+                        <p>The ${title} helps you calculate key figures quickly and accurately.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-800">How</h3>
+                        <ol class="list-decimal pl-4 space-y-1">
+                            <li>Enter your values in the input fields.</li>
+                            <li>Review the results instantly.</li>
+                            <li>Adjust inputs to compare scenarios.</li>
+                        </ol>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-800">Formula</h3>
+                        <p>Results are computed using standard industry formulas based on the values you provide.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-800">Tips</h3>
+                        <ul class="list-disc pl-4 space-y-1">
+                            <li>Use realistic numbers for the most accurate estimate.</li>
+                            <li>Compare multiple scenarios to plan ahead.</li>
+                            <li>Save or bookmark results for quick reference.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-800">FAQ</h3>
+                        <div class="space-y-3">
+                            <div class="rounded border border-slate-200 bg-white p-3 shadow-sm">
+                                <p class="font-semibold text-slate-700">Is this calculator accurate?</p>
+                                <p>Yes. It uses standard formulas and reflects the numbers you enter.</p>
+                            </div>
+                            <div class="rounded border border-slate-200 bg-white p-3 shadow-sm">
+                                <p class="font-semibold text-slate-700">Can I use this on mobile?</p>
+                                <p>Absolutely. All DailyCalc tools are optimized for mobile devices.</p>
+                            </div>
+                            <div class="rounded border border-slate-200 bg-white p-3 shadow-sm">
+                                <p class="font-semibold text-slate-700">How should I interpret the results?</p>
+                                <p>Use the summary to compare options and adjust inputs to explore alternatives.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-800">Related Tools</h3>
+                        <div class="grid gap-3 sm:grid-cols-2">
+                            ${related.map((tool) => `
+                                <a href="${tool.url}" class="block rounded border border-slate-200 bg-white p-3 shadow-sm hover:border-brand-red/40 transition">
+                                    <div class="flex items-center gap-2 text-slate-700 font-semibold text-xs">
+                                        <i class="fa-solid ${tool.icon} text-brand-red"></i>
+                                        <span>${tool.name}</span>
+                                    </div>
+                                    <p class="mt-1 text-[11px] text-slate-500">${tool.description}</p>
+                                </a>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `);
+        });
+    }
+};
+window.GuideEnhancer = GuideEnhancer;
 
 // --- HISTORY MANAGER ---
 const HistoryManager = {
@@ -770,6 +1037,10 @@ document.addEventListener('DOMContentLoaded', () => {
     SidebarWidget.init();
     AutoSave.init(); 
     DynamicSEO.init();
+    AnalyticsManager.init();
+    StatsManager.track();
+    AdManager.renderSlots();
+    GuideEnhancer.enhance();
 
     const loadSidebarWidget = () => {
         const widgets = document.querySelectorAll('[data-widget="related-tools"]');

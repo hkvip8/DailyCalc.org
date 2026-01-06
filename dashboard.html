@@ -131,6 +131,25 @@
                         <p class="text-[10px]">Save specific results to view them here.</p>
                     </div>
                 </section>
+
+                <!-- Section 4: Tool Usage -->
+                <section id="usage-section" class="content-section h-full min-h-[300px]">
+                    <div class="bg-gradient-to-r from-brand-dark to-brand-red px-3 py-2 flex justify-between items-center border-b border-white/10">
+                        <div class="flex items-center gap-2">
+                            <h2 class="text-sm font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-chart-line text-white/80"></i> Tool Usage
+                            </h2>
+                            <span id="usageCount" class="text-[10px] font-medium text-white/80 bg-white/10 px-2 py-0.5 rounded-full">0</span>
+                        </div>
+                    </div>
+                    <div id="usageContainer" class="max-h-[600px] overflow-y-auto slim-scroll"></div>
+                    <div id="usageEmptyState" class="hidden flex flex-col items-center justify-center py-12 text-center text-slate-400">
+                        <i class="fa-solid fa-chart-line text-3xl mb-2 opacity-20"></i>
+                        <p class="text-xs font-medium text-slate-500">No usage data</p>
+                        <p class="text-[10px]">Open calculators to generate usage stats.</p>
+                    </div>
+                </section>
+
             </div>
 
         </div>

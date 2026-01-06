@@ -21,6 +21,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const wishlistEmptyState = document.getElementById('wishlistEmptyState');
     const wishlistCountBadge = document.getElementById('wishlistCount');
 
+    const usageCountBadge = document.getElementById('usageCount');
+    const usageContainer = document.getElementById('usageContainer');
+    const usageEmptyState = document.getElementById('usageEmptyState');
+
     // --- Helper: Time Ago ---
     function timeAgo(dateString) {
         if(!dateString) return "";
@@ -233,6 +237,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // --- 4. Load Usage Stats ---
+    function loadUsageStats() {
+        if (!usageContainer || !window.StatsManager) return;
+        const stats = window.StatsManager.topTools(10);
+        if (usageCountBadge) usageCountBadge.textContent = stats.length;
+
+        if (stats.length === 0) {
+            if (usageEmptyState) usageEmptyState.classList.remove('hidden');
+            usageContainer.classList.add('hidden');
+            return;
+        }
+
+        if (usageEmptyState) usageEmptyState.classList.add('hidden');
+        usageContainer.classList.remove('hidden');
+        usageContainer.innerHTML = stats.map(item => `
+            <div class="flex items-center justify-between border-b border-slate-100 px-3 py-2 text-xs">
+                <div>
+                    <p class="font-semibold text-slate-700">${item.title}</p>
+                    <p class="text-[10px] text-slate-400">${item.category}</p>
+                </div>
+                <span class="text-[10px] font-bold text-brand-dark">${item.views} views</span>
+            </div>
+        `).join('');
+    }
+
+
     // --- Event Listeners ---
 
     // Clear History
@@ -297,6 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadWishlist();
     loadHistory();
     loadPresets();
+    loadUsageStats();
 
     // Listen for cross-tab updates or header updates
     window.addEventListener('wishlistUpdated', loadWishlist);
